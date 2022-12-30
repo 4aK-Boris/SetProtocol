@@ -6,5 +6,6 @@ import aleksandr.fedotkin.set.protocol.domain.models.certificate.card.c.init.req
 import java.math.BigInteger
 
 interface CardCInitReqRepository : BaseSetRepository<CardCInitReqModel, CardCInitReq> {
-    suspend fun createCardCInitReqModel(rrpid: BigInteger): CardCInitReqModel
+
+    suspend fun create(rrpid: BigInteger): CardCInitReqModel
 }

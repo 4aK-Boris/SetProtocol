@@ -1,6 +1,5 @@
 package aleksandr.fedotkin.set.protocol.core.mapper
 
-import aleksandr.fedotkin.set.protocol.core.NUMBER_LENGTH
 import aleksandr.fedotkin.set.protocol.core.TestModel
 import aleksandr.fedotkin.set.protocol.core.di.setModule
 import aleksandr.fedotkin.set.protocol.core.di.testModule
@@ -9,10 +8,11 @@ import java.math.BigInteger
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
+import org.koin.core.parameter.parametersOf
 import org.koin.test.KoinTest
 import org.koin.test.KoinTestRule
+import org.koin.test.get
 import org.koin.test.inject
-import kotlin.random.Random
 import kotlin.test.assertEquals
 
 abstract class BaseMapperTest<T, R> : KoinTest {
@@ -23,11 +23,11 @@ abstract class BaseMapperTest<T, R> : KoinTest {
     }
 
     protected fun generateNewNumber(): BigInteger {
-        return BigInteger(rnd.nextBytes(NUMBER_LENGTH))
+        return get()
     }
 
     protected fun generateByteArray(size: Int): ByteArray {
-        return rnd.nextBytes(size = size)
+        return get { parametersOf(size) }
     }
 
     abstract val mapper: BaseMapper<T, R>
@@ -59,9 +59,5 @@ abstract class BaseMapperTest<T, R> : KoinTest {
         val decodeModel = mapper.reverseMap(value = dto)
         println(title)
         equals(expected = decodeModel, actual = model)
-    }
-
-    companion object {
-        private val rnd = Random
     }
 }

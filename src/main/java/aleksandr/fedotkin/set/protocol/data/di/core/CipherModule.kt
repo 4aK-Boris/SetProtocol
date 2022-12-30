@@ -1,4 +1,4 @@
-package aleksandr.fedotkin.set.protocol.data.di.crypto
+package aleksandr.fedotkin.set.protocol.data.di.core
 
 import aleksandr.fedotkin.set.protocol.core.CIPHER_ALGORITHM
 import aleksandr.fedotkin.set.protocol.core.RSA

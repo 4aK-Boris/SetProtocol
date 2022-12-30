@@ -7,6 +7,7 @@ import java.security.PrivateKey
 import java.security.PublicKey
 
 interface SignatureRepository<T : Model, R: DTO>: BaseRepository {
+
     suspend fun create(
         data: T,
         privateKey: PrivateKey

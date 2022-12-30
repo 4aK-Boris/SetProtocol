@@ -3,7 +3,7 @@ package aleksandr.fedotkin.set.protocol.domain.useceses
 import aleksandr.fedotkin.set.protocol.domain.useceses.client.CardCInitReqClientUseCase
 import aleksandr.fedotkin.set.protocol.domain.useceses.client.CardCInitResClientUseCase
 
-class BuyerCertificateUSeCase(
+class BuyerCertificateUseCase(
     private val cardCInitReqUseCase: CardCInitReqClientUseCase,
     private val cardCInitResUseCase: CardCInitResClientUseCase
 ) {

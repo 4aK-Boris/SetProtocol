@@ -17,7 +17,9 @@ import kotlinx.coroutines.runBlocking
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 
-abstract class BaseSetUseCase<T : Model, R : DTO>(private val messageWrapperRepository: MessageWrapperRepository<T, R>) : BaseUseCase<T, R> {
+abstract class BaseSetUseCase<T : Model, R : DTO>(
+    private val messageWrapperRepository: MessageWrapperRepository<T, R>
+) : BaseUseCase<T, R> {
 
     abstract suspend fun sendError(json: String)
 
@@ -55,16 +57,17 @@ abstract class BaseSetUseCase<T : Model, R : DTO>(private val messageWrapperRepo
             }
         }
     }
+
     private suspend fun createErrorMessage(
-        errorCode: ErrorCode,
-        publicKey: PublicKey,
-        privateKey: PrivateKey
+        errorCode: ErrorCode, publicKey: PublicKey, privateKey: PrivateKey
     ): String {
-        return errorRepository.createErrorMessage(
-            errorCode = errorCode,
-            publicKey = publicKey,
-            privateKey = privateKey,
-            messageWrapperModel = messageWrapperModel
+        return errorRepository.convertToJson(
+            errorModel = errorRepository.create(
+                errorCode = errorCode,
+                publicKey = publicKey,
+                privateKey = privateKey,
+                messageWrapperModel = messageWrapperModel
+            ), messageWrapperModel = messageWrapperModel
         )
     }
 
@@ -76,17 +79,15 @@ abstract class BaseSetUseCase<T : Model, R : DTO>(private val messageWrapperRepo
         }
 
 
-    suspend fun <S: Model> convertToMessageWrapperModelS(model: S): MessageWrapperModel<S> {
+    suspend fun <S : Model> convertToMessageWrapperModelS(model: S): MessageWrapperModel<S> {
         return messageWrapperRepository.changeMessageModelOnOther(
-            messageModel = model,
-            messageWrapperModel = messageWrapperModel
+            messageModel = model, messageWrapperModel = messageWrapperModel
         )
     }
 
-    suspend fun <S: Model> convertToMessageWrapperModel(messageWrapperModel: MessageWrapperModel<S>, model: T) {
+    suspend fun <S : Model> convertToMessageWrapperModel(messageWrapperModel: MessageWrapperModel<S>, model: T) {
         this.messageWrapperModel = messageWrapperRepository.changeMessageModel(
-            messageModel = model,
-            messageWrapperModel = messageWrapperModel
+            messageModel = model, messageWrapperModel = messageWrapperModel
         )
     }
 

@@ -4,29 +4,32 @@ import aleksandr.fedotkin.set.protocol.core.Settings
 import aleksandr.fedotkin.set.protocol.core.repository.BaseTestRepository
 import aleksandr.fedotkin.set.protocol.domain.models.general.MessageHeaderModel
 import aleksandr.fedotkin.set.protocol.domain.repositories.general.MessageHeaderRepository
-import java.math.BigInteger
 import java.time.LocalDateTime
 import kotlinx.coroutines.runBlocking
+import org.junit.Before
 import org.junit.Test
 import org.koin.core.component.inject
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class MessageHeaderRepositoryTest: BaseTestRepository() {
-
-    override val clazz = this::class
+class MessageHeaderRepositoryTest: BaseTestRepository<MessageHeaderModel>() {
 
     override val repository by inject<MessageHeaderRepository>()
 
-    suspend fun createMessageHeader(rrpid: BigInteger = generateNewNumber()): MessageHeaderModel {
-        return repository.create(rrpid = rrpid)
+    override lateinit var model: MessageHeaderModel
+
+    val create by lazy { return@lazy repository::create }
+
+    private lateinit var dateTime: LocalDateTime
+
+    @Before
+    override fun before() = runBlocking {
+        model = create(rrpid)
+        dateTime = LocalDateTime.now()
     }
 
     @Test
     fun testCreate() = runBlocking {
-        val rrpid = generateNewNumber()
-        val dateTime = LocalDateTime.now()
-        val model = createMessageHeader(rrpid = rrpid)
         assertEquals(expected = model.rrpId,  actual = rrpid)
         assertEquals(expected = model.date.dayOfMonth, actual = dateTime.dayOfMonth)
         assertEquals(expected = model.date.dayOfWeek, actual = dateTime.dayOfWeek)

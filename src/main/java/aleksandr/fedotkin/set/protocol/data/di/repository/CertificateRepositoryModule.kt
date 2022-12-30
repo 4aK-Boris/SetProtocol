@@ -1,7 +1,5 @@
 package aleksandr.fedotkin.set.protocol.data.di.repository
 
-import aleksandr.fedotkin.set.protocol.core.di.certificate.Certificate
-import aleksandr.fedotkin.set.protocol.core.di.certificate.CertificateQualifiers
 import aleksandr.fedotkin.set.protocol.data.mappers.certificate.card.c.init.res.CardCInitResTBSMapper
 import aleksandr.fedotkin.set.protocol.data.mappers.certificate.reg.form.req.PANOnlyMapper
 import aleksandr.fedotkin.set.protocol.data.mappers.certificate.reg.form.req.RegFormReqDataMapper
@@ -18,7 +16,6 @@ import aleksandr.fedotkin.set.protocol.domain.repositories.certificate.reg.form.
 import aleksandr.fedotkin.set.protocol.domain.repositories.certificate.reg.form.req.RegFormReqDataRepository
 import aleksandr.fedotkin.set.protocol.domain.repositories.certificate.reg.form.req.RegFormReqRepository
 import org.koin.core.parameter.parametersOf
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val certificateRepositoryModule = module {
@@ -29,8 +26,6 @@ val certificateRepositoryModule = module {
         CardCInitResTBSRepositoryImpl(
             mapper = get(),
             keyRepository = get(),
-            privateKey = get(qualifier = named(CertificateQualifiers.CCA)),
-            certificate = get<Certificate>(qualifier = named(CertificateQualifiers.CCA)).x509Certificate,
             signatureRepository = get { parametersOf(get<CardCInitResTBSMapper>()) }
         )
     }

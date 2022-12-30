@@ -26,27 +26,28 @@ class ErrorRepositoryImpl<T : Model, R : DTO>(
     override suspend fun verifyError(
         json: String,
     ): Boolean {
-        return verifyErrorModel(errorModel = messageWrapperRepository.jsonToMessageWrapperModel(json = json).messageModel)
+        return verifyErrorModel(
+            errorModel = messageWrapperRepository.jsonToMessageWrapperModel(json = json).messageModel
+        )
     }
 
-    override suspend fun createErrorMessage(
-        errorCode: ErrorCode,
-        publicKey: PublicKey,
-        privateKey: PrivateKey,
-        messageWrapperModel: MessageWrapperModel<T>
-    ): String {
+    override suspend fun create(
+        errorCode: ErrorCode, publicKey: PublicKey, privateKey: PrivateKey, messageWrapperModel: MessageWrapperModel<T>
+    ): ErrorModel<T> {
         return createErrorModel(
             errorCode = errorCode,
             publicKey = publicKey,
             privateKey = privateKey,
             messageWrapperModel = messageWrapperModel
-        ).let { errorModel ->
-            messageWrapperRepository.messageWrapperModelToJson(
-                messageWrapperModel = createErrorMessageWrapper(
-                    errorModel = errorModel
-                )
+        )
+    }
+
+    override suspend fun convertToJson(errorModel: ErrorModel<T>, messageWrapperModel: MessageWrapperModel<T>): String {
+        return messageWrapperRepository.messageWrapperModelToJson(
+            messageWrapperModel = createErrorMessageWrapper(
+                errorModel = errorModel
             )
-        }
+        )
     }
 
     private suspend fun verifyErrorModel(
@@ -67,10 +68,7 @@ class ErrorRepositoryImpl<T : Model, R : DTO>(
     }
 
     private suspend fun createErrorModel(
-        errorCode: ErrorCode,
-        publicKey: PublicKey,
-        privateKey: PrivateKey,
-        messageWrapperModel: MessageWrapperModel<T>
+        errorCode: ErrorCode, publicKey: PublicKey, privateKey: PrivateKey, messageWrapperModel: MessageWrapperModel<T>
     ): ErrorModel<T> {
         val unsignedErrorModel = unsignedErrorRepository.create(
             publicKey = publicKey,

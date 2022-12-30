@@ -1,79 +1,62 @@
 package aleksandr.fedotkin.set.protocol.domain.di
 
-import aleksandr.fedotkin.set.protocol.core.di.certificate.CertificateQualifiers
 import aleksandr.fedotkin.set.protocol.data.mappers.certificate.card.c.init.req.CardCInitReqMapper
 import aleksandr.fedotkin.set.protocol.data.mappers.certificate.card.c.init.res.CardCInitResMapper
-import aleksandr.fedotkin.set.protocol.domain.useceses.BuyerCertificateUSeCase
+import aleksandr.fedotkin.set.protocol.domain.repositories.core.KeyRepository
+import aleksandr.fedotkin.set.protocol.domain.useceses.BuyerCertificateUseCase
 import aleksandr.fedotkin.set.protocol.domain.useceses.client.CardCInitReqClientUseCase
 import aleksandr.fedotkin.set.protocol.domain.useceses.client.CardCInitResClientUseCase
 import aleksandr.fedotkin.set.protocol.domain.useceses.server.CardCInitReqServerUseCase
 import aleksandr.fedotkin.set.protocol.domain.useceses.server.CardCInitResServerUseCase
+import java.security.PrivateKey
+import java.security.cert.X509Certificate
 import org.koin.core.parameter.parametersOf
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val useCasesModule = module {
 
     factory {
-        BuyerCertificateUSeCase(
+        BuyerCertificateUseCase(
             cardCInitReqUseCase = get(),
             cardCInitResUseCase = get()
         )
     }
 
     factory {
+        val keyRepository = get<KeyRepository>()
+        val (publicKey, privateKey) = keyRepository.generatePairKey()
         CardCInitReqClientUseCase(
             repository = get(),
-            privateKey = get(),
-            publicKey = get(),
-            messageWrapperRepository = get {
-                parametersOf(get<CardCInitReqMapper>())
-            })
+            privateKey = privateKey,
+            publicKey = publicKey,
+            messageWrapperRepository = get { parametersOf(get<CardCInitReqMapper>()) })
     }
 
-    factory {
+    factory { (certificate: X509Certificate, privateKey: PrivateKey) ->
         CardCInitReqServerUseCase(
-            cardCInitReqRepository = get(),
-            privateKey = get(
-                qualifier = named(
-                    CertificateQualifiers.CCA
-                )
-            ), publicKey = get(
-                qualifier = named(
-                    CertificateQualifiers.CCA
-                )
-            ),
-            messageWrapperRepository = get {
-                parametersOf(get<CardCInitReqMapper>())
-            }
+            repository = get(),
+            certificate = certificate,
+            privateKey = privateKey,
+            messageWrapperRepository = get { parametersOf(get<CardCInitReqMapper>()) }
         )
     }
 
     factory {
+        val keyRepository = get<KeyRepository>()
+        val (publicKey, privateKey) = keyRepository.generatePairKey()
         CardCInitResClientUseCase(
             repository = get(),
-            publicKey = get(),
-            privateKey = get(),
-            messageWrapperRepository = get {
-                parametersOf(get<CardCInitResMapper>())
-            })
+            privateKey = privateKey,
+            publicKey = publicKey,
+            messageWrapperRepository = get { parametersOf(get<CardCInitResMapper>()) })
     }
 
-    factory {
+    factory { (certificate: X509Certificate, privateKey: PrivateKey) ->
         CardCInitResServerUseCase(
             repository = get(),
-            privateKey = get(
-                qualifier = named(
-                    CertificateQualifiers.CCA
-                )
-            ), publicKey = get(
-                qualifier = named(
-                    CertificateQualifiers.CCA
-                )
-            ),
-            messageWrapperRepository = get {
-                parametersOf(get<CardCInitResMapper>())
-            }
+            certificate = certificate,
+            privateKey = privateKey,
+            messageWrapperRepository = get { parametersOf(get<CardCInitResMapper>()) }
         )
     }
 }

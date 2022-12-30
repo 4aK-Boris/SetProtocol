@@ -15,8 +15,6 @@ import java.security.cert.X509Certificate
 class CardCInitResTBSRepositoryImpl(
     override val mapper: CardCInitResTBSMapper,
     private val keyRepository: KeyRepository,
-    private val certificate: X509Certificate,
-    private val privateKey: PrivateKey,
     private val signatureRepository: SignatureRepository<CardCInitResTBSModel, CardCInitResTBS>,
 ) : CardCInitResTBSRepository {
 
@@ -28,7 +26,7 @@ class CardCInitResTBSRepositoryImpl(
         )
     }
 
-    override suspend fun create(model: CardCInitReqModel): CardCInitResTBSModel {
+    override suspend fun create(model: CardCInitReqModel, certificate: X509Certificate): CardCInitResTBSModel {
         return CardCInitResTBSModel(
             rrpID = model.rrpID,
             lidEE = model.lidEE,
@@ -40,7 +38,7 @@ class CardCInitResTBSRepositoryImpl(
         )
     }
 
-    override suspend fun createSignature(model: CardCInitResTBSModel): ByteArray {
+    override suspend fun createSignature(model: CardCInitResTBSModel, privateKey: PrivateKey): ByteArray {
         return signatureRepository.create(data = model, privateKey = privateKey)
     }
 

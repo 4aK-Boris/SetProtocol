@@ -26,7 +26,7 @@ class CardCInitReqClientUseCase(
     }
 
     suspend fun createAndSend(): String {
-        messageWrapperModel = createMessageWrapperModel(model = repository.createCardCInitReqModel(rrpid))
+        messageWrapperModel = createMessageWrapperModel(model = repository.create(rrpid))
         return send()
     }
 }

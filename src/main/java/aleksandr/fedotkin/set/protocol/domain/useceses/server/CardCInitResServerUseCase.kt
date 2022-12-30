@@ -9,10 +9,10 @@ import aleksandr.fedotkin.set.protocol.domain.repositories.certificate.card.c.in
 import aleksandr.fedotkin.set.protocol.domain.repositories.general.MessageWrapperRepository
 import java.math.BigInteger
 import java.security.PrivateKey
-import java.security.PublicKey
+import java.security.cert.X509Certificate
 
 class CardCInitResServerUseCase(
-    override val publicKey: PublicKey,
+    override val certificate: X509Certificate,
     override val privateKey: PrivateKey,
     override val repository: CardCInitResRepository,
     messageWrapperRepository: MessageWrapperRepository<CardCInitResModel, CardCInitRes>
@@ -27,8 +27,13 @@ class CardCInitResServerUseCase(
     suspend fun createAndSend(messageWrapperModel: MessageWrapperModel<CardCInitReqModel>) {
         convertToMessageWrapperModel(
             messageWrapperModel = messageWrapperModel,
-            model = repository.create(cardCInitReqModel = messageWrapperModel.messageModel)
+            model = repository.create(
+                cardCInitReqModel = messageWrapperModel.messageModel,
+                certificate = certificate,
+                privateKey = privateKey
+            )
         )
         sendMessage(json)
     }
 }
+

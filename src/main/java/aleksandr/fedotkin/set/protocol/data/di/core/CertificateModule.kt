@@ -1,4 +1,4 @@
-package aleksandr.fedotkin.set.protocol.data.di.crypto
+package aleksandr.fedotkin.set.protocol.data.di.core
 
 import aleksandr.fedotkin.set.protocol.core.X509
 import java.security.cert.CertificateFactory

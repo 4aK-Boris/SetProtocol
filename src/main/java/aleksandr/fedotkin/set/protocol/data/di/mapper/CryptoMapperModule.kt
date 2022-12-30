@@ -32,11 +32,11 @@ val cryptoMapperModule = module {
     }
 
     factory {
-        OAEPMapper(base64Mapper = get(), keyRepository = get(),)
+        OAEPMapper(base64Mapper = get(), keyRepository = get())
     }
 
     factory {
-        OAEP2Mapper(base64Mapper = get(), keyRepository = get(),)
+        OAEP2Mapper(base64Mapper = get(), keyRepository = get())
     }
 
     factory { (mapper: SetMapper<Model, DTO>) ->

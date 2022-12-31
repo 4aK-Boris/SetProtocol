@@ -1,16 +1,19 @@
 package aleksandr.fedotkin.set.protocol.domain.repositories.certificate.reg.form.res
 
+import aleksandr.fedotkin.set.protocol.core.repository.BaseSetRepository
 import aleksandr.fedotkin.set.protocol.data.dto.certificate.reg.form.res.RegFormRes
+import aleksandr.fedotkin.set.protocol.domain.models.certificate.reg.form.req.RegFormReqDataModel
 import aleksandr.fedotkin.set.protocol.domain.models.certificate.reg.form.res.RegFormResModel
-import kotlinx.serialization.KSerializer
+import java.security.PrivateKey
+import java.security.cert.X509Certificate
 
-interface RegFormResRepository {
+interface RegFormResRepository : BaseSetRepository<RegFormResModel, RegFormRes> {
 
-    val serializer: KSerializer<RegFormRes>
+    suspend fun create(
+        regFormReqDataModel: RegFormReqDataModel,
+        privateKey: PrivateKey,
+        certificate: X509Certificate
+    ): RegFormResModel
 
-    val convertToModel: (RegFormRes) -> RegFormResModel
-
-    val convertToDTO: (RegFormResModel) -> RegFormRes
-
-    suspend fun checkSignature(regFormResModel: RegFormResModel): Boolean
+    suspend fun checkSignature(model: RegFormResModel, certificate: X509Certificate): Boolean
 }

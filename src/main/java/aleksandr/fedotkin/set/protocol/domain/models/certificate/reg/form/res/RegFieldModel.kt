@@ -5,7 +5,7 @@ import java.math.BigInteger
 
 data class RegFieldModel(
     val fieldId: BigInteger?,
-    val fieldName: List<String>,
+    val fieldName: String,
     val fieldDesc: String?,
     val fieldLen: Int?,
     val fieldRequired: Boolean,

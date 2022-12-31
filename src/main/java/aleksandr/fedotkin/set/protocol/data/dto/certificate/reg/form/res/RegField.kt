@@ -5,7 +5,7 @@ import aleksandr.fedotkin.set.protocol.core.DTO
 @kotlinx.serialization.Serializable
 data class RegField(
     val fieldId: String?,
-    val fieldName: List<String>,
+    val fieldName: String,
     val fieldDesc: String?,
     val fieldLen: Int?,
     val fieldRequired: Boolean,

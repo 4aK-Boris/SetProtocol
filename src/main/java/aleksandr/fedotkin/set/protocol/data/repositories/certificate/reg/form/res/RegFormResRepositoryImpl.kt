@@ -23,8 +23,8 @@ class RegFormResRepositoryImpl(
         return RegFormResModel(signature = signature, regFormResTBS = regFormResTBSModel)
     }
 
-    override suspend fun checkSignature(model: RegFormResModel, certificate: X509Certificate): Boolean {
-        return regFormResTBSRepository.checkSignature(
+    override suspend fun verifySignature(model: RegFormResModel, certificate: X509Certificate): Boolean {
+        return regFormResTBSRepository.verifySignature(
             model = model.regFormResTBS,
             certificate = certificate,
             signature = model.signature

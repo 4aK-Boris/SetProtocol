@@ -27,7 +27,6 @@ class PANOnlyRepositoryTest : BaseTestRepository<PANOnlyModel>() {
 
     @Test
     fun testCreate(): Unit = runBlocking {
-        val model = create(number)
         assertEquals(expected = model.pan.toString(), actual = number)
         assertFailsWith(exceptionClass = NumberFormatException::class) {
             create("dwadwadwadwadwadwa")

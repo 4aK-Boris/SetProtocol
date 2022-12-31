@@ -13,7 +13,7 @@ interface RegFormResTBSRepository : BaseSetRepository<RegFormResTBSModel, RegFor
 
     suspend fun createSignature(model: RegFormResTBSModel, privateKey: PrivateKey): ByteArray
 
-    suspend fun checkSignature(
+    suspend fun verifySignature(
         model: RegFormResTBSModel,
         certificate: X509Certificate,
         signature: ByteArray

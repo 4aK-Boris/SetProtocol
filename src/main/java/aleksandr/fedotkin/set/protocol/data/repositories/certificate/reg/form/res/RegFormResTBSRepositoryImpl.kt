@@ -35,7 +35,7 @@ class RegFormResTBSRepositoryImpl(
         return signatureRepository.create(data = model, privateKey = privateKey)
     }
 
-    override suspend fun checkSignature(
+    override suspend fun verifySignature(
         model: RegFormResTBSModel,
         certificate: X509Certificate,
         signature: ByteArray

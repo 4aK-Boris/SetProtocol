@@ -13,7 +13,7 @@ class RegFieldMapperTest : BaseObjectMapperTest<RegFieldModel, RegField>() {
     override suspend fun generateModel(): RegFieldModel {
         return RegFieldModel(
             fieldId = generateNewNumber(),
-            fieldName = listOf("dwadwa", "284m8924c23"),
+            fieldName = ("284m8924c23"),
             fieldDesc = "7x1203/2v4 /23",
             fieldLen = Random.nextInt(),
             fieldRequired = true,

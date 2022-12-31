@@ -5,27 +5,18 @@ import aleksandr.fedotkin.set.protocol.data.repositories.core.KeyRepositoryTest
 import aleksandr.fedotkin.set.protocol.data.repositories.core.MessageDigestRepositoryTest
 import aleksandr.fedotkin.set.protocol.data.repositories.core.SignatureRepositoryTest
 import aleksandr.fedotkin.set.protocol.data.repositories.core.SymmetricCipherRepositoryTest
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val coreRepositoryTestModule = module {
 
-    factory {
-        AsymmetricCipherRepositoryTest()
-    }
+    factoryOf(::AsymmetricCipherRepositoryTest)
 
-    factory {
-        KeyRepositoryTest()
-    }
+    factoryOf(::KeyRepositoryTest)
 
-    factory {
-        MessageDigestRepositoryTest()
-    }
+    factoryOf(::MessageDigestRepositoryTest)
 
-    factory {
-        SignatureRepositoryTest()
-    }
+    factoryOf(::SignatureRepositoryTest)
 
-    factory {
-        SymmetricCipherRepositoryTest()
-    }
+    factoryOf(::SymmetricCipherRepositoryTest)
 }

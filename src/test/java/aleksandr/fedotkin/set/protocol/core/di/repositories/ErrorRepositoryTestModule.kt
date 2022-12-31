@@ -5,27 +5,18 @@ import aleksandr.fedotkin.set.protocol.data.repositories.error.ErrorRepositoryTe
 import aleksandr.fedotkin.set.protocol.data.repositories.error.ErrorTBSRepositoryTest
 import aleksandr.fedotkin.set.protocol.data.repositories.error.SignedErrorRepositoryTest
 import aleksandr.fedotkin.set.protocol.data.repositories.error.UnsignedErrorRepositoryTest
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val errorRepositoryTestModule = module {
 
-    factory {
-        ErrorMsgRepositoryTest()
-    }
+    factoryOf(::ErrorMsgRepositoryTest)
 
-    factory {
-        ErrorTBSRepositoryTest()
-    }
+    factoryOf(::ErrorTBSRepositoryTest)
 
-    factory {
-        SignedErrorRepositoryTest()
-    }
+    factoryOf(::SignedErrorRepositoryTest)
 
-    factory {
-        ErrorRepositoryTest()
-    }
+    factoryOf(::ErrorRepositoryTest)
 
-    factory {
-        UnsignedErrorRepositoryTest()
-    }
+    factoryOf(::UnsignedErrorRepositoryTest)
 }

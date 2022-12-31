@@ -1,4 +1,4 @@
-package aleksandr.fedotkin.set.protocol.core.di.mappers.core
+package aleksandr.fedotkin.set.protocol.core.di.mappers
 
 import aleksandr.fedotkin.set.protocol.data.mappers.core.Base64MapperTest
 import aleksandr.fedotkin.set.protocol.data.mappers.core.BigIntegerMapperTest
@@ -9,25 +9,26 @@ import aleksandr.fedotkin.set.protocol.data.mappers.core.json.JsonByteArrayMappe
 import aleksandr.fedotkin.set.protocol.data.mappers.core.json.JsonMapperTest
 import aleksandr.fedotkin.set.protocol.data.mappers.core.json.JsonModelByteArrayMapperTest
 import aleksandr.fedotkin.set.protocol.data.mappers.core.json.JsonModelMapperTest
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val coreMappersTestModule = module {
 
-    factory { JsonMapperTest() }
+    factoryOf(::JsonMapperTest)
 
-    factory { JsonByteArrayMapperTest() }
+    factoryOf(::JsonByteArrayMapperTest)
 
-    factory { JsonModelMapperTest() }
+    factoryOf(::JsonModelMapperTest)
 
-    factory { JsonModelByteArrayMapperTest() }
+    factoryOf(::JsonModelByteArrayMapperTest)
 
-    factory { BigIntegerMapperTest() }
+    factoryOf(::BigIntegerMapperTest)
 
-    factory { ByteArrayMapperTest() }
+    factoryOf(::ByteArrayMapperTest)
 
-    factory { DateMapperTest() }
+    factoryOf(::DateMapperTest)
 
-    factory { DateTimeMapperTest() }
+    factoryOf(::DateTimeMapperTest)
 
-    factory { Base64MapperTest() }
+    factoryOf(::Base64MapperTest)
 }

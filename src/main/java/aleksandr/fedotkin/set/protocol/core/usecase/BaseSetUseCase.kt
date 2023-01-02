@@ -8,7 +8,6 @@ import aleksandr.fedotkin.set.protocol.core.exception.SetInternalException
 import aleksandr.fedotkin.set.protocol.domain.models.general.MessageWrapperModel
 import aleksandr.fedotkin.set.protocol.domain.repositories.error.ErrorRepository
 import aleksandr.fedotkin.set.protocol.domain.repositories.general.MessageWrapperRepository
-import java.math.BigInteger
 import java.security.PrivateKey
 import java.security.PublicKey
 import kotlinx.coroutines.CoroutineScope
@@ -91,7 +90,7 @@ abstract class BaseSetUseCase<T : Model, R : DTO>(
         )
     }
 
-    fun checkRRPID(rrpid: BigInteger) {
+    fun checkRRPID() {
         if (messageWrapperModel.messageHeaderModel.rrpId != rrpid) {
             throw SetExternalException(errorCode = ErrorCode.UnknownXID)
         }

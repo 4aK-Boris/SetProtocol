@@ -1,5 +1,7 @@
 package aleksandr.fedotkin.set.protocol.data.repositories.certificate.reg.form.res
 
+import aleksandr.fedotkin.set.protocol.core.contentEquals
+import aleksandr.fedotkin.set.protocol.data.dto.RequestType
 import aleksandr.fedotkin.set.protocol.data.dto.certificate.reg.form.res.RegFormResTBS
 import aleksandr.fedotkin.set.protocol.data.mappers.certificate.reg.form.res.RegFormResTBSMapper
 import aleksandr.fedotkin.set.protocol.domain.models.certificate.reg.form.req.RegFormReqDataModel
@@ -7,6 +9,7 @@ import aleksandr.fedotkin.set.protocol.domain.models.certificate.reg.form.res.Re
 import aleksandr.fedotkin.set.protocol.domain.repositories.certificate.reg.form.res.RegFormOrReferralRepository
 import aleksandr.fedotkin.set.protocol.domain.repositories.certificate.reg.form.res.RegFormResTBSRepository
 import aleksandr.fedotkin.set.protocol.domain.repositories.core.SignatureRepository
+import java.math.BigInteger
 import java.security.PrivateKey
 import java.security.cert.X509Certificate
 
@@ -45,5 +48,25 @@ class RegFormResTBSRepositoryImpl(
             publicKey = certificate.publicKey,
             signatureArray = signature
         )
+    }
+
+    override suspend fun checkRRPID(rrpid: BigInteger, model: RegFormResTBSModel): Boolean {
+        return rrpid == model.rrpID
+    }
+
+    override suspend fun checkRequestType(requestType: RequestType, model: RegFormResTBSModel): Boolean {
+        return requestType == model.requestType
+    }
+
+    override suspend fun checkLIDEE(lidEE: BigInteger, model: RegFormResTBSModel): Boolean {
+        return lidEE == model.lidEE
+    }
+
+    override suspend fun checkChallEE2(challEE2: BigInteger, model: RegFormResTBSModel): Boolean {
+        return challEE2 == model.challEE2
+    }
+
+    override suspend fun checkThumbs(thumbs: List<ByteArray>, model: RegFormResTBSModel): Boolean {
+        return model.thumbs.contentEquals(other = thumbs)
     }
 }

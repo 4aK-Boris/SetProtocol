@@ -19,9 +19,5 @@ interface RegFormReqRepository : BaseSetRepository<RegFormReqModel, RegFormReq> 
         publicKey: PublicKey
     ): RegFormReqModel
 
-    suspend fun decryptAndCheck(
-        rrpid: BigInteger,
-        privateKey: PrivateKey,
-        model: RegFormReqModel
-    ): Pair<RegFormReqDataModel, PANOnlyModel>
+    suspend fun decrypt(privateKey: PrivateKey, model: RegFormReqModel): Pair<RegFormReqDataModel, PANOnlyModel>
 }

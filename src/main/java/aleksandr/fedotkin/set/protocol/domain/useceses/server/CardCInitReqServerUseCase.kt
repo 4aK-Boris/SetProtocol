@@ -15,7 +15,7 @@ class CardCInitReqServerUseCase(
     override val certificate: X509Certificate,
     override val privateKey: PrivateKey,
     messageWrapperRepository: MessageWrapperRepository<CardCInitReqModel, CardCInitReq>
-) : BaseServerRequestUseCase<CardCInitReqModel, CardCInitReq>(messageWrapperRepository) {
+) : BaseServerRequestUseCase<CardCInitReqModel, CardCInitReq, CardCInitReqModel>(messageWrapperRepository) {
 
     override lateinit var rrpid: BigInteger
 
@@ -23,10 +23,10 @@ class CardCInitReqServerUseCase(
 
     override lateinit var sendMessage: suspend (String) -> Unit
 
-    suspend fun processingMessage(json: String): MessageWrapperModel<CardCInitReqModel> {
+    override suspend fun processingMessage(json: String): MessageWrapperModel<CardCInitReqModel> {
         messageWrapperModel = convertFromString(json = json)
         rrpid = messageWrapperModel.messageModel.rrpID
-        checkRRPID(rrpid = messageWrapperModel.messageModel.rrpID)
+        checkRRPID()
         return messageWrapperModel
     }
 }

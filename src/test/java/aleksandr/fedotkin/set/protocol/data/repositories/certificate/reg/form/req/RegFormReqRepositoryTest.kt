@@ -34,8 +34,7 @@ class RegFormReqRepositoryTest : BaseTestRepository<RegFormReqModel>() {
 
     @Test
     fun testCreateAndDecrypt() = runBlocking {
-        val (regFromReqDataModel, panOnlyModel) = repository.decryptAndCheck(
-            rrpid = rrpid,
+        val (regFromReqDataModel, panOnlyModel) = repository.decrypt(
             privateKey = privateKey,
             model = model
         )

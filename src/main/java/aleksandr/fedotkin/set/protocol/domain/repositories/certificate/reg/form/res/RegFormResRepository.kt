@@ -15,5 +15,7 @@ interface RegFormResRepository : BaseSetRepository<RegFormResModel, RegFormRes> 
         certificate: X509Certificate
     ): RegFormResModel
 
-    suspend fun verifySignature(model: RegFormResModel, certificate: X509Certificate): Boolean
+    suspend fun verifySignature(model: RegFormResModel, certificate: X509Certificate)
+
+    suspend fun check(model: RegFormResModel, thumbs: List<ByteArray>, regFormReqDataModel: RegFormReqDataModel)
 }

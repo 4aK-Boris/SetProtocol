@@ -5,27 +5,18 @@ import aleksandr.fedotkin.set.protocol.data.mappers.crypto.oaep.OAEP2MapperTest
 import aleksandr.fedotkin.set.protocol.data.mappers.crypto.oaep.OAEP3MapperTest
 import aleksandr.fedotkin.set.protocol.data.mappers.crypto.oaep.OAEP4MapperTest
 import aleksandr.fedotkin.set.protocol.data.mappers.crypto.oaep.OAEPMapperTest
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val cryptoMapperTestModule = module {
 
-    factory {
-        EXHMapperTest()
-    }
+    factoryOf(::EXHMapperTest)
 
-    factory {
-        OAEPMapperTest()
-    }
+    factoryOf(::OAEPMapperTest)
 
-    factory {
-        OAEP2MapperTest()
-    }
+    factoryOf(::OAEP2MapperTest)
 
-    factory {
-        OAEP3MapperTest()
-    }
+    factoryOf(::OAEP3MapperTest)
 
-    factory {
-        OAEP4MapperTest()
-    }
+    factoryOf(::OAEP4MapperTest)
 }

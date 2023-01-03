@@ -5,14 +5,16 @@ import aleksandr.fedotkin.set.protocol.data.dto.certificate.card.c.init.res.Card
 import aleksandr.fedotkin.set.protocol.domain.models.certificate.card.c.init.req.CardCInitReqModel
 import aleksandr.fedotkin.set.protocol.domain.models.certificate.card.c.init.res.CardCInitResTBSModel
 import java.math.BigInteger
+import java.security.PrivateKey
+import java.security.cert.X509Certificate
 
 interface CardCInitResTBSRepository: BaseSetRepository<CardCInitResTBSModel, CardCInitResTBS> {
 
     suspend fun verifySignature(model: CardCInitResTBSModel, signature: ByteArray): Boolean
 
-    suspend fun create(model: CardCInitReqModel): CardCInitResTBSModel
+    suspend fun create(model: CardCInitReqModel, certificate: X509Certificate): CardCInitResTBSModel
 
-    suspend fun createSignature(model: CardCInitResTBSModel): ByteArray
+    suspend fun createSignature(model: CardCInitResTBSModel, privateKey: PrivateKey): ByteArray
 
     suspend fun checkRRPID(rrpid: BigInteger?, secondRRPID: BigInteger, thirdRRPID: BigInteger): Boolean
 

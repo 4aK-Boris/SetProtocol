@@ -15,3 +15,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "SetProtocol"
+include(":Client")
+include(":Server")

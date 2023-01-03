@@ -1,11 +1,13 @@
 package aleksandr.fedotkin.set.protocol.core.repository
 
+import aleksandr.fedotkin.set.protocol.core.NUMBER_LENGTH
 import java.math.BigInteger
+import org.koin.core.component.KoinComponent
 import kotlin.random.Random
 
-interface BaseRepository {
+interface BaseRepository: KoinComponent {
     fun generateNewNumber(): BigInteger {
-        return BigInteger(rnd.nextBytes(20))
+        return BigInteger(rnd.nextBytes(NUMBER_LENGTH))
     }
 
     fun generateNewNumber(data: String): BigInteger {

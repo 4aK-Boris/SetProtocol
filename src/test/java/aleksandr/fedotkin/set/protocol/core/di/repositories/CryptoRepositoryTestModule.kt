@@ -5,27 +5,18 @@ import aleksandr.fedotkin.set.protocol.data.repositories.crypto.OAEP2RepositoryT
 import aleksandr.fedotkin.set.protocol.data.repositories.crypto.OAEP3RepositoryTest
 import aleksandr.fedotkin.set.protocol.data.repositories.crypto.OAEP4RepositoryTest
 import aleksandr.fedotkin.set.protocol.data.repositories.crypto.OAEPRepositoryTest
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val cryptoRepositoryTestModule = module {
 
-    factory {
-        OAEPRepositoryTest()
-    }
+    factoryOf(::OAEPRepositoryTest)
 
-    factory {
-        OAEP2RepositoryTest()
-    }
+    factoryOf(::OAEP2RepositoryTest)
 
-    factory {
-        OAEP3RepositoryTest()
-    }
+    factoryOf(::OAEP3RepositoryTest)
 
-    factory {
-        OAEP4RepositoryTest()
-    }
+    factoryOf(::OAEP4RepositoryTest)
 
-    factory {
-        EXHRepositoryTest()
-    }
+    factoryOf(::EXHRepositoryTest)
 }

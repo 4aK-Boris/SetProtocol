@@ -1,29 +1,62 @@
 package aleksandr.fedotkin.set.protocol.core.repository
 
 import aleksandr.fedotkin.set.protocol.core.NUMBER_LENGTH
+import aleksandr.fedotkin.set.protocol.core.SIGNATURE_ALGORITHM
+import aleksandr.fedotkin.set.protocol.core.TestMapper
 import aleksandr.fedotkin.set.protocol.core.TestModel
 import aleksandr.fedotkin.set.protocol.core.di.setModule
 import aleksandr.fedotkin.set.protocol.core.di.testModule
+import aleksandr.fedotkin.set.protocol.domain.repositories.core.KeyRepository
 import java.math.BigInteger
+import java.security.PrivateKey
+import java.security.PublicKey
+import java.security.Security
+import java.security.cert.X509Certificate
+import java.util.*
+import javax.crypto.SecretKey
+import org.bouncycastle.asn1.x500.X500Name
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter
+import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder
+import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder
+import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
 import org.koin.test.KoinTest
 import org.koin.test.KoinTestRule
 import org.koin.test.inject
 import kotlin.random.Random
-import kotlin.reflect.KClass
-import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.functions
-import kotlin.reflect.full.hasAnnotation
-import kotlin.test.assertEquals
 
-abstract class BaseTestRepository : KoinTest {
-
-    abstract val repository: BaseRepository
+abstract class BaseTestRepository<T> : KoinTest {
 
     @get:Rule
     val koinTestRule = KoinTestRule.create {
         modules(setModule, testModule)
+    }
+
+    private val keyRepository by inject<KeyRepository>()
+    private val testRepository by inject<TestRepository>()
+    protected val testMapper by inject<TestMapper>()
+
+    protected lateinit var rrpid: BigInteger
+    protected lateinit var publicKey: PublicKey
+    protected lateinit var privateKey : PrivateKey
+    protected lateinit var certificate: X509Certificate
+    protected lateinit var secretKey: SecretKey
+
+    abstract val repository: BaseRepository
+    abstract var model: T
+
+    abstract fun before()
+
+    @Before
+    fun beforeBase() {
+        rrpid = generateNewNumber()
+        keyRepository.generatePairKey().apply {
+            publicKey = first
+            privateKey = second
+        }
+        certificate = generateCertificate()
+        secretKey = keyRepository.generateSecretKey()
     }
 
     fun generateNewNumber(): BigInteger {
@@ -34,8 +67,6 @@ abstract class BaseTestRepository : KoinTest {
         return rnd.nextBytes(size = size)
     }
 
-    private val testRepository by inject<TestRepository>()
-
     protected suspend fun generateTestModel(): TestModel {
         return testRepository.createModel()
     }
@@ -44,47 +75,23 @@ abstract class BaseTestRepository : KoinTest {
         return testRepository.createDTO()
     }
 
-    protected val testMapper by lazy { testRepository.mapper }
 
-    @Test
-    fun test() {
-        repository::class.functions.filter { it.hasAnnotation<RepositoryFunction>() }
-            .forEach { function ->
-                val defaultValues =
-                    clazz.functions.filter { it.findAnnotation<DefaultValue>()?.name == function.name }
-                        .map { it.call(this) }
-                val values = when {
-                    clazz.hasAnnotation<After>() -> {
-                        clazz.functions.filter { it.findAnnotation<TestFunction>()?.name == function.name }
-                            .zip(defaultValues)
-                            .map { (f, defaultValue) ->
-                                function.call(
-                                    repository,
-                                    f.call(this, defaultValue)
-                                ) to defaultValue
-                            }
-                    }
-
-                    clazz.hasAnnotation<Before>() -> {
-                        clazz.functions.filter { it.findAnnotation<TestFunction>()?.name == function.name }
-                            .zip(defaultValues).map { (f, defaultValue) ->
-                                f.call(clazz, function.call(repository, defaultValue), defaultValue) to defaultValue
-                            }
-                    }
-
-                    else -> emptyList()
-                }
-
-                if (values.isNotEmpty()) {
-                    println("${repository::class.simpleName} -> ${function.name}")
-                }
-                values.forEach { (value, defaultValue) ->
-                    assertEquals(expected = value, actual = defaultValue)
-                }
-            }
+    private fun generateCertificate(): X509Certificate {
+        val bcProvider = BouncyCastleProvider()
+        Security.addProvider(bcProvider)
+        val startDate = Date()
+        val endDate = Calendar.getInstance().run {
+            time = startDate
+            add(Calendar.YEAR, 1)
+            this.time
+        }
+        val serialNumber = BigInteger(System.currentTimeMillis().toString())
+        val x500Name = X500Name("CN=Александр Федоткин")
+        val builder = JcaX509v3CertificateBuilder(x500Name, serialNumber, startDate, endDate, x500Name, publicKey)
+        val contentSigner = JcaContentSignerBuilder(SIGNATURE_ALGORITHM).build(privateKey)
+        val x509CertificateHolder = builder.build(contentSigner)
+        return JcaX509CertificateConverter().setProvider(bcProvider).getCertificate(x509CertificateHolder)
     }
-
-    abstract val clazz: KClass<*>
 
     companion object {
         private val rnd = Random

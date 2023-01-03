@@ -20,5 +20,6 @@ dependencies {
 
     testImplementation("io.insert-koin:koin-test:$koinVersion")
     testImplementation("io.insert-koin:koin-test-junit4:$koinVersion")
+    testImplementation("org.mockito:mockito-core:4.10.0")
     testImplementation("junit:junit:4.13.2")
 }

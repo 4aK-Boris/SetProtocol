@@ -10,4 +10,5 @@ const val NUMBER_LENGTH = 20
 const val CIPHER_ALGORITHM = "AES"
 const val X509 = "X.509"
 const val SYMMETRIC_KEY_LENGTH = 256
+const val ASYMMETRIC_KEY_LENGTH = 2048
 const val CERT_REQ = "certReq"

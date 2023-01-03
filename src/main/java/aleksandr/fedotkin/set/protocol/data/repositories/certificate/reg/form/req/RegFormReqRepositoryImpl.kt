@@ -1,7 +1,5 @@
 package aleksandr.fedotkin.set.protocol.data.repositories.certificate.reg.form.req
 
-import aleksandr.fedotkin.set.protocol.core.exception.ErrorCode
-import aleksandr.fedotkin.set.protocol.core.exception.SetExternalException
 import aleksandr.fedotkin.set.protocol.data.mappers.certificate.reg.form.req.RegFormReqMapper
 import aleksandr.fedotkin.set.protocol.domain.models.certificate.reg.form.req.PANOnlyModel
 import aleksandr.fedotkin.set.protocol.domain.models.certificate.reg.form.req.RegFormReqDataModel
@@ -42,19 +40,10 @@ class RegFormReqRepositoryImpl(
         return RegFormReqModel(exh = exhModel)
     }
 
-    override suspend fun decryptAndCheck(
-        rrpid: BigInteger,
+    override suspend fun decrypt(
         privateKey: PrivateKey,
         model: RegFormReqModel
     ): Pair<RegFormReqDataModel, PANOnlyModel> {
-        val (regFormReqDataModel, panOnlyModel) = exhRepository.decrypt(privateKey = privateKey, model = model.exh)
-        checkRRPID(rrpid = rrpid, regFormReqDataModel = regFormReqDataModel)
-        return regFormReqDataModel to panOnlyModel
-    }
-
-    private suspend fun checkRRPID(rrpid: BigInteger, regFormReqDataModel: RegFormReqDataModel) {
-        if (!regFormReqDataRepository.checkRRPID(rrpid, regFormReqDataModel)) {
-            throw SetExternalException(errorCode = ErrorCode.UnknownXID)
-        }
+        return exhRepository.decrypt(privateKey = privateKey, model = model.exh)
     }
 }

@@ -5,27 +5,18 @@ import aleksandr.fedotkin.set.protocol.data.mappers.error.ErrorMsgMapperTest
 import aleksandr.fedotkin.set.protocol.data.mappers.error.ErrorTBSMapperTest
 import aleksandr.fedotkin.set.protocol.data.mappers.error.SignedErrorMapperTest
 import aleksandr.fedotkin.set.protocol.data.mappers.error.UnsignedErrorMapperTest
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val errorMapperTestModule = module {
 
-    factory {
-        SignedErrorMapperTest()
-    }
+    factoryOf(::SignedErrorMapperTest)
 
-    factory {
-        ErrorMsgMapperTest()
-    }
+    factoryOf(::ErrorMsgMapperTest)
 
-    factory {
-        ErrorTBSMapperTest()
-    }
+    factoryOf(::ErrorTBSMapperTest)
 
-    factory {
-        UnsignedErrorMapperTest()
-    }
+    factoryOf(::UnsignedErrorMapperTest)
 
-    factory {
-        ErrorMapperTest()
-    }
+    factoryOf(::ErrorMapperTest)
 }

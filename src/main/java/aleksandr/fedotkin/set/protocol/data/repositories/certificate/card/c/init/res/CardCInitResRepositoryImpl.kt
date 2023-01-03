@@ -8,6 +8,8 @@ import aleksandr.fedotkin.set.protocol.domain.models.certificate.card.c.init.res
 import aleksandr.fedotkin.set.protocol.domain.repositories.certificate.card.c.init.res.CardCInitResRepository
 import aleksandr.fedotkin.set.protocol.domain.repositories.certificate.card.c.init.res.CardCInitResTBSRepository
 import java.math.BigInteger
+import java.security.PrivateKey
+import java.security.cert.X509Certificate
 
 class CardCInitResRepositoryImpl(
     override val mapper: CardCInitResMapper,
@@ -26,9 +28,14 @@ class CardCInitResRepositoryImpl(
         checkThumbs(cardCInitReqModel, cardCInitResModel)
     }
 
-    override suspend fun create(cardCInitReqModel: CardCInitReqModel): CardCInitResModel {
-        val cardCInitResTBSModel = cardCInitResTBSRepository.create(model = cardCInitReqModel)
-        val signature = cardCInitResTBSRepository.createSignature(model = cardCInitResTBSModel)
+    override suspend fun create(
+        cardCInitReqModel: CardCInitReqModel,
+        certificate: X509Certificate,
+        privateKey: PrivateKey
+    ): CardCInitResModel {
+        val cardCInitResTBSModel =
+            cardCInitResTBSRepository.create(model = cardCInitReqModel, certificate = certificate)
+        val signature = cardCInitResTBSRepository.createSignature(model = cardCInitResTBSModel, privateKey = privateKey)
         return CardCInitResModel(signature = signature, cardCInitResTBS = cardCInitResTBSModel)
     }
 

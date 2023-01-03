@@ -1,53 +1,49 @@
 package aleksandr.fedotkin.set.protocol.data.repositories.certificate.card.c.init.res
 
-import aleksandr.fedotkin.set.protocol.core.di.certificate.Certificate
-import aleksandr.fedotkin.set.protocol.core.di.certificate.CertificateQualifiers
 import aleksandr.fedotkin.set.protocol.core.repository.BaseTestRepository
 import aleksandr.fedotkin.set.protocol.data.repositories.certificate.card.c.init.req.CardCInitReqRepositoryTest
 import aleksandr.fedotkin.set.protocol.domain.models.certificate.card.c.init.req.CardCInitReqModel
 import aleksandr.fedotkin.set.protocol.domain.models.certificate.card.c.init.res.CardCInitResTBSModel
 import aleksandr.fedotkin.set.protocol.domain.repositories.certificate.card.c.init.res.CardCInitResTBSRepository
 import kotlinx.coroutines.runBlocking
+import org.junit.Before
 import org.junit.Test
 import org.koin.core.component.inject
-import org.koin.core.qualifier.named
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class CardCInitResTBSRepositoryTest: BaseTestRepository() {
-
-    override val clazz = this::class
+class CardCInitResTBSRepositoryTest : BaseTestRepository<CardCInitResTBSModel>() {
 
     override val repository by inject<CardCInitResTBSRepository>()
 
+    override lateinit var model: CardCInitResTBSModel
+
+    val create by lazy { return@lazy repository::create }
+
+    private lateinit var cardCInitReqModel: CardCInitReqModel
+
     private val cardCInitReqRepositoryTest by inject<CardCInitReqRepositoryTest>()
-    private val certificate by inject<Certificate>(qualifier = named(CertificateQualifiers.CCA))
 
-    suspend fun create(cardCInitReqModel: CardCInitReqModel): CardCInitResTBSModel {
-        return repository.create(model = cardCInitReqModel)
+    @Before
+    override fun before() = runBlocking {
+        cardCInitReqModel = cardCInitReqRepositoryTest.create(rrpid)
+        model = create(cardCInitReqModel, certificate)
     }
-
 
     @Test
     fun testCreate() = runBlocking {
-        val rrpid = generateNewNumber()
-        val cardCInitReqModel = cardCInitReqRepositoryTest.create(rrpid = rrpid)
-        val model = create(cardCInitReqModel = cardCInitReqModel)
         assertEquals(expected = model.rrpID, actual = rrpid)
         assertContentEquals(expected = model.thumbs, cardCInitReqModel.thumbs)
         assertEquals(expected = model.lidEE, actual = cardCInitReqModel.lidEE)
         assertEquals(expected = model.challEE, actual = cardCInitReqModel.challEE)
-        assertContentEquals(expected = model.caeThumb, certificate.x509Certificate.encoded)
+        assertContentEquals(expected = model.caeThumb, certificate.encoded)
     }
 
     @Test
     fun testSignature() = runBlocking {
-        val rrpid = generateNewNumber()
-        val cardCInitReqModel = cardCInitReqRepositoryTest.create(rrpid = rrpid)
-        val model = create(cardCInitReqModel = cardCInitReqModel)
-        val signature = repository.createSignature(model = model)
+        val signature = repository.createSignature(model = model, privateKey = privateKey)
         val verify = repository.verifySignature(model = model, signature = signature)
         assertTrue(actual = verify)
 

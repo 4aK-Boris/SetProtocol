@@ -16,10 +16,14 @@ interface ErrorRepository<T: Model, R: DTO>: BaseSetRepository<ErrorModel<T>, Er
         json: String,
     ): Boolean
 
-    suspend fun createErrorMessage(
+
+
+    suspend fun create(
         errorCode: ErrorCode,
         publicKey: PublicKey,
         privateKey: PrivateKey,
         messageWrapperModel: MessageWrapperModel<T>
-    ): String
+    ): ErrorModel<T>
+
+    suspend fun convertToJson(errorModel: ErrorModel<T>, messageWrapperModel: MessageWrapperModel<T>): String
 }

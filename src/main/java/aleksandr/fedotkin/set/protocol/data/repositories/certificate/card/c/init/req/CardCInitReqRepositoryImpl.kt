@@ -9,7 +9,7 @@ class CardCInitReqRepositoryImpl(
     override val mapper: CardCInitReqMapper
 ) : CardCInitReqRepository {
 
-      override suspend fun createCardCInitReqModel(rrpid: BigInteger): CardCInitReqModel {
+    override suspend fun create(rrpid: BigInteger): CardCInitReqModel {
         return CardCInitReqModel(
             rrpID = rrpid,
             lidEE = generateNewNumber(),

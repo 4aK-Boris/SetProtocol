@@ -1,0 +1,14 @@
+package aleksandr.fedotkin.core.data.mappers.core
+
+import aleksandr.fedotkin.core.core.mapper.CoreMapper
+import java.util.*
+
+class Base64Mapper: CoreMapper<ByteArray, String> {
+    override fun map(value: ByteArray): String {
+        return Base64.getEncoder().encodeToString(value)
+    }
+
+    override fun reverseMap(value: String): ByteArray {
+        return Base64.getDecoder().decode(value)
+    }
+}
